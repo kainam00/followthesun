@@ -22,8 +22,7 @@
   </head>
   <body>
 </br>
-<div class="container" ng-app="fts"  ng-controller="ftsCtl">
-  <div class="container" role="timezones">
+<div ng-app="fts"  ng-controller="ftsCtl">
     <h3>Timezone comparison</br><small>Typical working hours highlighted</small></h3>
 
     <table id="times_table" class="table table-hover table-bordered table-condensed">
@@ -43,7 +42,6 @@
       </tr>
 
     </table>
-  </div>
 
       <script>
         var app = angular.module('fts', ["ngSanitize"]);
