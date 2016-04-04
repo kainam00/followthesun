@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="./js/angular.js"></script>
+<script src="./js/angular-sanitize.js"></script>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Follow the sun</title>
+
+    <!-- Bootstrap -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+</br>
+<div class="container" ng-app="fts"  ng-controller="ftsCtl">
+  <div class="container" role="timezones">
+    <h3>Timezone comparison</br><small>Typical working hours highlighted</small></h3>
+
+    <table id="times_table" class="table table-hover table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Timezone</th>
+        <th>UTC offset</th>
+      </tr>
+    </thead>
+      <tr ng-repeat="timezone in timezones">
+        <td><small>{{timezone.name}}</small></td>
+        <td><small>UTC {{timezone.offset}}</small></td>
+        <td ng-repeat="hour in hours">
+          <small> <span ng-bind-html='hour | hour_display_filter: timezone.offset'></span>
+          </small>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+      <script>
+        var app = angular.module('fts', ["ngSanitize"]);
+        app.filter('hour_display_filter', function() {
+            return function(hour, offset)
+            {
+              // Working hours
+              workhours = [9,10,11,12,13,14,15,16,17];
+
+              // Adjust for offset and convert to 12-hour format
+              newhour = (((24 + hour + parseInt(offset)) % 24) + 11) % 12 + 1;
+              ampm = ((24 + hour + parseInt(offset)) % 24 >= 12)? 'pm' : 'am';
+
+              // Check to see if working hours or not
+              if($.inArray((24 + hour + parseInt(offset)) % 24 , workhours ) !== -1)
+              {
+                return "<mark>" + newhour + ":00" + ampm + "</mark>";
+              }
+              else
+              {
+                return newhour + ":00" + ampm;
+              }
+
+            }
+          }
+        )
+
+        app.controller('ftsCtl', function($scope) {
+          // -------- Functions ----------
+          // This function goes through the table and highlights working hours
+          // I call it postprocessing
+          function highLightHours() {
+            $("#times_table tr").each(function () {
+
+                $('td', this).each(function () {
+                    var value = $(this).val();
+                    alert(value);
+                 })
+            })
+          }
+
+          // -------- Init tasks ---------
+          $scope.timezones = [
+            { name: 'Israel', offset: '+2:00' },
+            { name: 'Detroit', offset: '-5:00' },
+            { name: 'Chicago', offset: '-6:00' },
+            { name: 'Seattle', offset: '-8:00' }
+            ];
+
+            $scope.Math = window.Math;
+            $scope.parseInt = window.parseInt;
+
+            $scope.hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+            highLightHours();
+
+      });
+    </script>
+  </div>
+</div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="./js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="./js/bootstrap.min.js"></script>
+</body>
+</html>
